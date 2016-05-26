@@ -4,9 +4,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace MissinKit.Interop.Varargs
+namespace MissinKit.Interop.VariadicArguments
 {
-    public sealed class StringArgument : VariableArgument
+    public sealed class StringArgument : VariadicArgument
     {
         private bool _disposed;
         private IntPtr _handle;

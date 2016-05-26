@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
-using MissinKit.Interop.Varargs;
+using MissinKit.Interop.VariadicArguments;
 using ObjCRuntime;
 
 namespace MissinKit.Utilities
@@ -16,7 +16,7 @@ namespace MissinKit.Utilities
         private static readonly IntPtr LocalizedStringForKeyValueTableHandle = Selector.GetHandle("localizedStringForKey:value:table:");
         #endregion
 
-        public static string LocalizedFormat(NSString format, params VariableArgument[] args)
+        public static string LocalizedFormat(NSString format, params VariadicArgument[] args)
         {
             if (format == null)
                 throw new ArgumentNullException(nameof(format));
@@ -25,7 +25,7 @@ namespace MissinKit.Utilities
                 throw new ArgumentNullException(nameof(args));
 
             using (var str = NSObject.Alloc(new Class(typeof(NSString))))
-            using (var varargs = new VariableArgumentList(args))
+            using (var varargs = new VariadicArgumentList(args))
                 return NSString.FromHandle(NSStringInitWithFormatArguments(str.Handle, InitWithFormatArgumentsHandle, format.Handle, varargs.Handle));
         }
 

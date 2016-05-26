@@ -4,22 +4,22 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace MissinKit.Interop.Varargs
+namespace MissinKit.Interop.VariadicArguments
 {
-    public sealed class Int32Argument : VariableArgument
+    public sealed class Int64Argument : VariadicArgument
     {
-        private readonly int _value;
+        private readonly long _value;
 
-        public Int32Argument(int value)
+        public Int64Argument(long value)
         {
             _value = value;
         }
 
         protected internal override void CopyTo(IntPtr ptr)
         {
-            Marshal.Copy(new [] { _value }, 0, ptr, 1);
+            Marshal.Copy(new[] { _value }, 0, ptr, 1);
         }
 
-        public override int Size { get; } = sizeof(int);
+        public override int Size { get; } = sizeof(long);
     }
 }

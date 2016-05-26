@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Ruben Buniatyan
+// Copyright 2016 Ruben Buniatyan
 // This source is subject to the license agreement accompanying it.
 
 using System;
@@ -6,16 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace MissinKit.Interop.Varargs
+namespace MissinKit.Interop.VariadicArguments
 {
-    public sealed class VariableArgumentList : IDisposable
+    public sealed class VariadicArgumentList : IDisposable
     {
         #region Fields
-        private IList<VariableArgument> _args;
+        private IList<VariadicArgument> _args;
         private bool _disposed;
         #endregion
 
-        public VariableArgumentList(IList<VariableArgument> args)
+        public VariadicArgumentList(IList<VariadicArgument> args)
         {
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
@@ -35,7 +35,7 @@ namespace MissinKit.Interop.Varargs
         }
 
         #region Dispose
-        ~VariableArgumentList()
+        ~VariadicArgumentList()
         {
             Dispose(false);
         }

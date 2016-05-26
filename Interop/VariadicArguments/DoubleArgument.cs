@@ -4,13 +4,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace MissinKit.Interop.Varargs
+namespace MissinKit.Interop.VariadicArguments
 {
-    public sealed class Int64Argument : VariableArgument
+    public sealed class DoubleArgument : VariadicArgument
     {
-        private readonly long _value;
+        private readonly double _value;
 
-        public Int64Argument(long value)
+        public DoubleArgument(double value)
         {
             _value = value;
         }
@@ -20,6 +20,6 @@ namespace MissinKit.Interop.Varargs
             Marshal.Copy(new[] { _value }, 0, ptr, 1);
         }
 
-        public override int Size { get; } = sizeof(long);
+        public override int Size { get; } = sizeof(double);
     }
 }

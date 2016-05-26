@@ -3,9 +3,9 @@
 
 using System;
 
-namespace MissinKit.Interop.Varargs
+namespace MissinKit.Interop.VariadicArguments
 {
-    public abstract class VariableArgument : IDisposable
+    public abstract class VariadicArgument : IDisposable
     {
         #region Dispose
         public void Dispose()
@@ -24,36 +24,36 @@ namespace MissinKit.Interop.Varargs
         protected internal abstract void CopyTo(IntPtr ptr);
 
         #region Operators
-        public static implicit operator VariableArgument(double arg)
+        public static implicit operator VariadicArgument(double arg)
         {
             return new DoubleArgument(arg);
         }
 
-        public static implicit operator VariableArgument(int arg)
+        public static implicit operator VariadicArgument(int arg)
         {
             return nint.Size == sizeof(long)
                 ? new Int64Argument(arg)
-                : (VariableArgument) new Int32Argument(arg);
+                : (VariadicArgument) new Int32Argument(arg);
         }
 
-        public static implicit operator VariableArgument(long arg)
+        public static implicit operator VariadicArgument(long arg)
         {
             return new Int64Argument(arg);
         }
 
-        public static implicit operator VariableArgument(nfloat arg)
+        public static implicit operator VariadicArgument(nfloat arg)
         {
             return new DoubleArgument(arg);
         }
 
-        public static implicit operator VariableArgument(nint arg)
+        public static implicit operator VariadicArgument(nint arg)
         {
             return nint.Size == sizeof(long)
                 ? new Int64Argument(arg)
-                : (VariableArgument) new Int32Argument((int) arg);
+                : (VariadicArgument) new Int32Argument((int) arg);
         }
 
-        public static implicit operator VariableArgument(string arg)
+        public static implicit operator VariadicArgument(string arg)
         {
             return new StringArgument(arg);
         }

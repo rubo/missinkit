@@ -1,5 +1,5 @@
 ﻿// Copyright 2016 Ruben Buniatyan
-// This source is subject to the license agreement accompanying it.
+// Licensed under the MIT License. For full terms, see LICENSE in the project root.
 
 using System;
 using System.Runtime.InteropServices;

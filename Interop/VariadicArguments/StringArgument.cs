@@ -27,7 +27,8 @@ namespace MissinKit.Interop.VariadicArguments
             if (_disposed)
                 return;
 
-            Marshal.FreeHGlobal(_handle);
+            if (_handle != IntPtr.Zero)
+                Marshal.FreeHGlobal(_handle);
 
             _disposed = true;
 
@@ -36,7 +37,7 @@ namespace MissinKit.Interop.VariadicArguments
 
         protected internal override void CopyTo(IntPtr ptr)
         {
-            _handle = Marshal.StringToHGlobalAuto(_value);
+            _handle = Marshal.StringToHGlobalUni(_value);
 
             Marshal.Copy(new [] { _handle }, 0, ptr, 1);
         }

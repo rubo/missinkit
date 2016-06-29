@@ -16,17 +16,17 @@ namespace MissinKit.UI
         private static readonly nfloat MinVelocity = 900;
 
         private UIViewController _contentViewController;
-        private nfloat _drawerWidth;
+        private nfloat _drawerWidth = 270;
         private bool _ignorePan;
         private bool _isShadowDropped;
         private UIView _overlayView;
         private UIPanGestureRecognizer _panGestureRecognizer;
         private nfloat _panOriginX;
-        private UIColor _shadowColor;
-        private float _shadowOpacity;
-        private nfloat _shadowRadius;
+        private UIColor _shadowColor = UIColor.Black;
+        private float _shadowOpacity = .5F;
+        private nfloat _shadowRadius = 5;
         private UIViewController _sideViewController;
-        private double _slidingDuration;
+        private double _slidingDuration = CATransaction.AnimationDuration;
         private UITapGestureRecognizer _tapGestureRecognizer;
         #endregion
 
@@ -48,28 +48,14 @@ namespace MissinKit.UI
         /// </exception>
         public DrawerController(UIViewController contentViewController, UIViewController sideViewController)
         {
-            Initialize(contentViewController, sideViewController);
-        }
-
-        private void Initialize(UIViewController contentViewController, UIViewController sideViewController)
-        {
             if (contentViewController == null)
                 throw new ArgumentNullException(nameof(contentViewController));
 
             if (sideViewController == null)
                 throw new ArgumentNullException(nameof(sideViewController));
 
-            DrawerPosition = DrawerPosition.Left;
-            DrawerWidth = 270;
-            DropShadow = true;
-            ShadowColor = UIColor.Black;
-            ShadowOpacity = .5F;
-            ShadowRadius = 5;
-            SlidingDuration = CATransaction.AnimationDuration;
-            UseGestures = true;
-
-            SideViewController = sideViewController;
-            ContentViewController = contentViewController;
+            _contentViewController = contentViewController;
+            _sideViewController = sideViewController;
         }
         #endregion
 
@@ -83,7 +69,7 @@ namespace MissinKit.UI
         /// <param name="completionHandler">
         /// Completion action to execute after closing finishes.
         /// </param>
-        public void CloseDrawer(bool animate, Action completionHandler)
+        public virtual void CloseDrawer(bool animate, Action completionHandler)
         {
             if (!IsDrawerOpen)
                 return;
@@ -106,7 +92,7 @@ namespace MissinKit.UI
         /// <param name="completionHandler">
         /// Completion action to execute after opening finishes.
         /// </param>
-        public void OpenDrawer(bool animate, Action completionHandler)
+        public virtual void OpenDrawer(bool animate, Action completionHandler)
         {
             if (IsDrawerOpen)
                 return;
@@ -128,7 +114,7 @@ namespace MissinKit.UI
         /// <summary>
         /// Toggles the drawer open or closed.
         /// </summary>
-        public void ToggleDrawer()
+        public virtual void ToggleDrawer()
         {
             if (IsDrawerOpen)
                 CloseDrawer(true, null);
@@ -177,6 +163,9 @@ namespace MissinKit.UI
 
             _tapGestureRecognizer = new UITapGestureRecognizer { NumberOfTapsRequired = 1 };
             _tapGestureRecognizer.AddTarget(OnTapGestureRecognized);
+
+            SideViewController = _sideViewController;
+            ContentViewController = _contentViewController;
         }
 
         public override void ViewWillAppear(bool animated)
@@ -194,7 +183,7 @@ namespace MissinKit.UI
         /// <exception cref="T:System.ArgumentNullException">
         /// <paramref name="value"/> is null.
         /// </exception>
-        public UIViewController ContentViewController
+        public virtual UIViewController ContentViewController
         {
             get { return _contentViewController; }
             set
@@ -238,7 +227,7 @@ namespace MissinKit.UI
         /// <summary>
         /// Gets or sets the drawer position.
         /// </summary>
-        public DrawerPosition DrawerPosition { get; set; }
+        public virtual DrawerPosition DrawerPosition { get; set; } = DrawerPosition.Right;
 
         /// <summary>
         /// Gets or sets the drawer width.
@@ -246,7 +235,7 @@ namespace MissinKit.UI
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="value"/> is negative.
         /// </exception>
-        public nfloat DrawerWidth
+        public virtual nfloat DrawerWidth
         {
             get { return _drawerWidth; }
             set
@@ -261,17 +250,17 @@ namespace MissinKit.UI
         /// <summary>
         /// Gets or sets a value indicating whether to drop a shadow over the drawer.
         /// </summary>
-        public bool DropShadow { get; set; }
+        public virtual bool DropShadow { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether to hide the status bar when drawer is open.
         /// </summary>
-        public bool HideStatusBar { get; set; }
+        public virtual bool HideStatusBar { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the drawer is open.
         /// </summary>
-        public bool IsDrawerOpen { get; private set; }
+        public virtual bool IsDrawerOpen { get; private set; }
 
         /// <summary>
         /// Gets or sets the radius of the shadow over the drawer.
@@ -279,7 +268,7 @@ namespace MissinKit.UI
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="value"/> is negative.
         /// </exception>
-        public nfloat ShadowRadius
+        public virtual nfloat ShadowRadius
         {
             get
             {
@@ -300,7 +289,7 @@ namespace MissinKit.UI
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="value"/> is less than 0 or greater than 1.
         /// </exception>
-        public float ShadowOpacity
+        public virtual float ShadowOpacity
         {
             get
             {
@@ -321,7 +310,7 @@ namespace MissinKit.UI
         /// <exception cref="T:System.ArgumentNullException">
         /// <paramref name="value"/> is null.
         /// </exception>
-        public UIColor ShadowColor
+        public virtual UIColor ShadowColor
         {
             get
             {
@@ -339,7 +328,7 @@ namespace MissinKit.UI
         /// <summary>
         /// Gets the side view controller.
         /// </summary>
-        public UIViewController SideViewController
+        public virtual UIViewController SideViewController
         {
             get { return _sideViewController; }
             private set
@@ -358,7 +347,7 @@ namespace MissinKit.UI
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="value"/> is negative.
         /// </exception>
-        public double SlidingDuration
+        public virtual double SlidingDuration
         {
             get { return _slidingDuration; }
             set
@@ -373,7 +362,7 @@ namespace MissinKit.UI
         /// <summary>
         /// Gets or sets a value indicating whether drawer can be opened or closed by swiping.
         /// </summary>
-        public bool UseGestures { get; set; }
+        public virtual bool UseGestures { get; set; } = true;
         #endregion
 
         #region Private Methods

@@ -14,7 +14,6 @@ namespace MissinKit.Net
         protected readonly NetworkReachability HostReachability;
 
         private bool _disposed;
-        private bool _useLocalWifiStatus;
         #endregion
 
         #region Events
@@ -98,11 +97,6 @@ namespace MissinKit.Net
         /// Checks whether the default route is available. Should be used by applications that do not connect to a particular host.
         /// </summary>
         public static Reachability Internet { get; } = new Reachability(new IPAddress(0));
-
-        /// <summary>
-        /// Checks whether a local WiFi connection is available.
-        /// </summary>
-        public static Reachability LocalWifiNetwork { get; } = new Reachability(new IPAddress(0x0000FEA9)) { _useLocalWifiStatus = true };
         #endregion
 
         #region Properties
@@ -111,7 +105,7 @@ namespace MissinKit.Net
         /// </summary>
         /// <remarks>
         /// WWAN may be available, but not active until a connection has been established.
-        /// WiFi may require a connection for VPN on Demand.
+        /// WLAN may require a connection for VPN on Demand.
         /// </remarks>
         public bool IsConnectionRequired
         {
@@ -126,40 +120,32 @@ namespace MissinKit.Net
         /// <summary>
         /// Gets the reachability status of the host specified.
         /// </summary>
-        public NetworkStatus Status
+        public ReachabilityStatus Status
         {
             get
             {
                 NetworkReachabilityFlags flags;
 
-                return HostReachability.TryGetFlags(out flags)
-                    ? _useLocalWifiStatus ? GetLocalWifiNetworkStatus(flags) : GetNetworkStatus(flags)
-                    : NetworkStatus.NotReachable;
+                return HostReachability.TryGetFlags(out flags) ? GetReachabilityStatus(flags) : ReachabilityStatus.Unreachable;
             }
         }
         #endregion
 
-        protected static NetworkStatus GetLocalWifiNetworkStatus(NetworkReachabilityFlags flags)
-        {
-            return (flags & NetworkReachabilityFlags.Reachable) != 0 && (flags & NetworkReachabilityFlags.IsDirect) != 0
-                ? NetworkStatus.ReachableViaWifi : NetworkStatus.NotReachable;
-        }
-
-        protected static NetworkStatus GetNetworkStatus(NetworkReachabilityFlags flags)
+        protected static ReachabilityStatus GetReachabilityStatus(NetworkReachabilityFlags flags)
         {
             if ((flags & NetworkReachabilityFlags.Reachable) == 0)
-                return NetworkStatus.NotReachable;
+                return ReachabilityStatus.Unreachable;
 
             if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
-                return NetworkStatus.ReachableViaWwan;
+                return ReachabilityStatus.ReachableViaWwan;
 
             if ((flags & NetworkReachabilityFlags.ConnectionRequired) == 0 ||
                 (((flags & NetworkReachabilityFlags.ConnectionOnDemand) != 0 ||
                   (flags & NetworkReachabilityFlags.ConnectionOnTraffic) != 0) &&
                  (flags & NetworkReachabilityFlags.InterventionRequired) == 0))
-                return NetworkStatus.ReachableViaWifi;
+                return ReachabilityStatus.ReachableViaWlan;
 
-            return NetworkStatus.NotReachable;
+            return ReachabilityStatus.Unreachable;
         }
 
         protected virtual void RaiseReachabilityChangedEvent()
@@ -170,10 +156,19 @@ namespace MissinKit.Net
         }
     }
 
-    public enum NetworkStatus
+    public enum ReachabilityStatus
     {
-        NotReachable,
-        ReachableViaWifi,
+        /// <summary>
+        /// The specified host name or address cannot be reached.
+        /// </summary>
+        Unreachable,
+        /// <summary>
+        /// The specified host name or address can be reached via a wireless LAN, such as Wi-Fi.
+        /// </summary>
+        ReachableViaWlan,
+        /// <summary>
+        /// The specified host name or address can be reached via a cellular connection, such as EDGE or GPRS.
+        /// </summary>
         ReachableViaWwan
     }
 }

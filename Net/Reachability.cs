@@ -94,9 +94,9 @@ namespace MissinKit.Net
 
         #region Static Properties
         /// <summary>
-        /// Checks whether the default route is available. Should be used by applications that do not connect to a particular host.
+        /// Gets the default route reachability. Should be used by applications that do not connect to a particular host.
         /// </summary>
-        public static Reachability Internet { get; } = new Reachability(new IPAddress(0));
+        public static Reachability Default { get; } = new Reachability(new IPAddress(0));
         #endregion
 
         #region Properties

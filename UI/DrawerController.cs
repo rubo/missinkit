@@ -48,14 +48,8 @@ namespace MissinKit.UI
         /// </exception>
         public DrawerController(UIViewController contentViewController, UIViewController sideViewController)
         {
-            if (contentViewController == null)
-                throw new ArgumentNullException(nameof(contentViewController));
-
-            if (sideViewController == null)
-                throw new ArgumentNullException(nameof(sideViewController));
-
-            _contentViewController = contentViewController;
-            _sideViewController = sideViewController;
+            _contentViewController = contentViewController ?? throw new ArgumentNullException(nameof(contentViewController));
+            _sideViewController = sideViewController ?? throw new ArgumentNullException(nameof(sideViewController));
         }
         #endregion
 
@@ -185,12 +179,9 @@ namespace MissinKit.UI
         /// </exception>
         public virtual UIViewController ContentViewController
         {
-            get { return _contentViewController; }
+            get => _contentViewController;
             set
             {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-
                 var location = CGPoint.Empty;
 
                 if (_contentViewController?.View != null)
@@ -200,7 +191,7 @@ namespace MissinKit.UI
                     _contentViewController.View.RemoveFromSuperview();
                 }
 
-                _contentViewController = value;
+                _contentViewController = value ?? throw new ArgumentNullException(nameof(value));
 
                 var frame = _contentViewController.View.Frame;
 
@@ -237,7 +228,7 @@ namespace MissinKit.UI
         /// </exception>
         public virtual nfloat DrawerWidth
         {
-            get { return _drawerWidth; }
+            get => _drawerWidth;
             set
             {
                 if (value < 0)
@@ -270,10 +261,7 @@ namespace MissinKit.UI
         /// </exception>
         public virtual nfloat ShadowRadius
         {
-            get
-            {
-                return _shadowRadius;
-            }
+            get => _shadowRadius;
             set
             {
                 if (value < 0)
@@ -291,10 +279,7 @@ namespace MissinKit.UI
         /// </exception>
         public virtual float ShadowOpacity
         {
-            get
-            {
-                return _shadowOpacity;
-            }
+            get => _shadowOpacity;
             set
             {
                 if (value < 0 || value > 1)
@@ -312,17 +297,8 @@ namespace MissinKit.UI
         /// </exception>
         public virtual UIColor ShadowColor
         {
-            get
-            {
-                return _shadowColor;
-            }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-
-                _shadowColor = value;
-            }
+            get => _shadowColor;
+            set => _shadowColor = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
@@ -330,7 +306,7 @@ namespace MissinKit.UI
         /// </summary>
         public virtual UIViewController SideViewController
         {
-            get { return _sideViewController; }
+            get => _sideViewController;
             private set
             {
                 _sideViewController = value;
@@ -349,7 +325,7 @@ namespace MissinKit.UI
         /// </exception>
         public virtual double SlidingDuration
         {
-            get { return _slidingDuration; }
+            get => _slidingDuration;
             set
             {
                 if (value < 0)

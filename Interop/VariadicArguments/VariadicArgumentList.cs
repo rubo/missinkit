@@ -17,10 +17,7 @@ namespace MissinKit.Interop.VariadicArguments
 
         public VariadicArgumentList(IList<VariadicArgument> args)
         {
-            if (args == null)
-                throw new ArgumentNullException(nameof(args));
-
-            _args = args;
+            _args = args ?? throw new ArgumentNullException(nameof(args));
 
             Handle = Marshal.AllocHGlobal(_args.Sum(a => a.Size));
 

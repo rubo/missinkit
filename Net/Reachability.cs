@@ -107,28 +107,13 @@ namespace MissinKit.Net
         /// WWAN may be available, but not active until a connection has been established.
         /// WLAN may require a connection for VPN on Demand.
         /// </remarks>
-        public bool IsConnectionRequired
-        {
-            get
-            {
-                NetworkReachabilityFlags flags;
-
-                return HostReachability.TryGetFlags(out flags) && (flags & NetworkReachabilityFlags.ConnectionRequired) != 0;
-            }
-        }
+        public bool IsConnectionRequired => HostReachability.TryGetFlags(out NetworkReachabilityFlags flags) && (flags & NetworkReachabilityFlags.ConnectionRequired) != 0;
 
         /// <summary>
         /// Gets the reachability status of the host specified.
         /// </summary>
-        public ReachabilityStatus Status
-        {
-            get
-            {
-                NetworkReachabilityFlags flags;
+        public ReachabilityStatus Status => HostReachability.TryGetFlags(out NetworkReachabilityFlags flags) ? GetReachabilityStatus(flags) : ReachabilityStatus.Unreachable;
 
-                return HostReachability.TryGetFlags(out flags) ? GetReachabilityStatus(flags) : ReachabilityStatus.Unreachable;
-            }
-        }
         #endregion
 
         protected static ReachabilityStatus GetReachabilityStatus(NetworkReachabilityFlags flags)

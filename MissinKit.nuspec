@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright 2016 Ruben Buniatyan. All rights reserved.</copyright>
-    <tags>Xamarin Xamarin.iOS Drawer Navigation Reachability</tags>
+    <tags>Xamarin Xamarin.iOS Drawer Navigation Reachability Pluralization</tags>
   </metadata>
 </package>

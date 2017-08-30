@@ -2,18 +2,17 @@
 // Licensed under the MIT License. For full terms, see LICENSE in the project root.
 
 using System;
+using System.Diagnostics;
 using System.Net;
 using SystemConfiguration;
 using CoreFoundation;
 
 namespace MissinKit.Net
 {
-    public class Reachability : IDisposable
+    public class Reachability
     {
         #region Fields
         protected readonly NetworkReachability HostReachability;
-
-        private bool _disposed;
         #endregion
 
         #region Events
@@ -65,33 +64,6 @@ namespace MissinKit.Net
         }
         #endregion
 
-        #region Destructors
-        ~Reachability()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                HostReachability.Unschedule(CFRunLoop.Current, CFRunLoop.ModeDefault);
-
-                if (disposing)
-                    HostReachability.Dispose();
-
-                _disposed = true;
-            }
-        }
-        #endregion
-
         #region Static Properties
         /// <summary>
         /// Gets the default route reachability. Should be used by applications that do not connect to a particular host.
@@ -107,27 +79,38 @@ namespace MissinKit.Net
         /// WWAN may be available, but not active until a connection has been established.
         /// WLAN may require a connection for VPN on Demand.
         /// </remarks>
-        public bool IsConnectionRequired => HostReachability.TryGetFlags(out NetworkReachabilityFlags flags) && (flags & NetworkReachabilityFlags.ConnectionRequired) != 0;
+        public bool IsConnectionRequired => HostReachability.TryGetFlags(out var flags) && (flags & NetworkReachabilityFlags.ConnectionRequired) != 0;
 
         /// <summary>
         /// Gets the reachability status of the host specified.
         /// </summary>
-        public ReachabilityStatus Status => HostReachability.TryGetFlags(out NetworkReachabilityFlags flags) ? GetReachabilityStatus(flags) : ReachabilityStatus.Unreachable;
+        public ReachabilityStatus Status => HostReachability.TryGetFlags(out var flags) ? GetReachabilityStatus(flags) : ReachabilityStatus.Unreachable;
 
         #endregion
 
         protected static ReachabilityStatus GetReachabilityStatus(NetworkReachabilityFlags flags)
         {
+            Debug.WriteLine("Reachability flags: {0}{1}{2}{3}{4}{5}{6}{7}{8}",
+                (flags & NetworkReachabilityFlags.IsWWAN) != 0 ? 'W' : '-',
+                (flags & NetworkReachabilityFlags.Reachable) != 0 ? 'R' : '-',
+                (flags & NetworkReachabilityFlags.TransientConnection) != 0 ? 't' : '-',
+                (flags & NetworkReachabilityFlags.ConnectionRequired) != 0 ? 'c' : '-',
+                (flags & NetworkReachabilityFlags.ConnectionOnTraffic) != 0 ? 'C' : '-',
+                (flags & NetworkReachabilityFlags.InterventionRequired) != 0 ? 'i' : '-',
+                (flags & NetworkReachabilityFlags.ConnectionOnDemand) != 0 ? 'D' : '-',
+                (flags & NetworkReachabilityFlags.IsLocalAddress) != 0 ? 'l' : '-',
+                (flags & NetworkReachabilityFlags.IsDirect) != 0 ? 'd' : '-');
+
             if ((flags & NetworkReachabilityFlags.Reachable) == 0)
                 return ReachabilityStatus.Unreachable;
 
             if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
                 return ReachabilityStatus.ReachableViaWwan;
 
-            if ((flags & NetworkReachabilityFlags.ConnectionRequired) == 0 ||
-                (((flags & NetworkReachabilityFlags.ConnectionOnDemand) != 0 ||
-                  (flags & NetworkReachabilityFlags.ConnectionOnTraffic) != 0) &&
-                 (flags & NetworkReachabilityFlags.InterventionRequired) == 0))
+            if ((flags & NetworkReachabilityFlags.ConnectionRequired) == 0 || // if no connection is required
+                // or the connection is on-demand or on-traffic
+                ((flags & NetworkReachabilityFlags.ConnectionOnDemand) != 0 || (flags & NetworkReachabilityFlags.ConnectionOnTraffic) != 0) &&
+                (flags & NetworkReachabilityFlags.InterventionRequired) == 0) // and no user intervention is required
                 return ReachabilityStatus.ReachableViaWlan;
 
             return ReachabilityStatus.Unreachable;
@@ -152,7 +135,7 @@ namespace MissinKit.Net
         /// </summary>
         ReachableViaWlan,
         /// <summary>
-        /// The specified host name or address can be reached via a cellular connection, such as EDGE or GPRS.
+        /// The specified host name or address can be reached via a cellular connection, such as LTE or GPRS.
         /// </summary>
         ReachableViaWwan
     }

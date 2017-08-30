@@ -20,6 +20,8 @@ namespace MissinKit.Interop.VariadicArguments
         ~StringArgument()
         {
             Dispose(false);
+
+            GC.SuppressFinalize(this);
         }
 
         protected override void Dispose(bool disposing)
@@ -28,7 +30,11 @@ namespace MissinKit.Interop.VariadicArguments
                 return;
 
             if (_handle != IntPtr.Zero)
+            {
                 Marshal.FreeHGlobal(_handle);
+
+                _handle = IntPtr.Zero;
+            }
 
             _disposed = true;
 
@@ -37,6 +43,9 @@ namespace MissinKit.Interop.VariadicArguments
 
         protected internal override void CopyTo(IntPtr ptr)
         {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(StringArgument));
+
             _handle = Marshal.StringToHGlobalUni(_value);
 
             Marshal.Copy(new [] { _handle }, 0, ptr, 1);

@@ -8,8 +8,6 @@ namespace MissinKit.Utilities
 {
     public static class NSDateUtility
     {
-        private static readonly DateTime ReferenceDate = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         /// <summary>
         /// Converts the current <see cref="NSDate"/> object to its equivalent <see cref="DateTime"/> representation.
         /// </summary>
@@ -19,7 +17,15 @@ namespace MissinKit.Utilities
         /// </returns>
         public static DateTime ToDateTime(this NSDate date)
         {
-            return ReferenceDate.AddSeconds(date.SecondsSinceReferenceDate).ToLocalTime();
+            var seconds = date.SecondsSinceReferenceDate;
+
+            if (seconds < -63113904000)
+                return DateTime.MinValue;
+
+            if (seconds > 252423993599)
+                return DateTime.MaxValue;
+
+            return (DateTime) date;
         }
 
         /// <summary>

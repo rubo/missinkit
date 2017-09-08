@@ -35,6 +35,10 @@ namespace MissinKit.Utilities
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
 
+            // Falls back to return the format itself to prevent runtime error on x86_64 systems
+            if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 8)
+                return format; 
+
             using (var str = NSObject.Alloc(new Class(typeof(NSString))))
             using (var varargs = new VariadicArgumentList(args))
                 return NSString.FromHandle(NSStringInitWithFormatArguments(str.Handle, InitWithFormatArgumentsHandle, format.Handle, varargs.Handle));

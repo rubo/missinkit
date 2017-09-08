@@ -26,9 +26,12 @@ r.ReachabilityChanged += (s, e) => Debug.WriteLine($"Network Status: {r.Status}"
 ```
 
 #### Date Utilities
-Provides a quick way to convert `DateTime` to `NSDate` and vice-versa.
+There are two extension methods providing a quick way to convert `DateTime` to `NSDate` and vice-versa.
 ```csharp
 NSDate nsdate = DateTime.Now.ToNSDate();
 DateTime datetime = nsdate.ToDateTime();
 ```
 Not a big deal, but convenient.
+
+#### Machine Epsilon
+As on some ARM devices both `float.Epsilon` and `double.Epsilon` equate to zero, the constants `MachineEpsilon.Single` and `MachineEpsilon.Double` are recommended to be used instead.

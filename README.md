@@ -1,4 +1,5 @@
 # MissinKit
+[![NuGet](https://img.shields.io/nuget/v/MissinKit.svg)](https://www.nuget.org/packages/MissinKit)
 
 ## License
 The code is released under the [MIT License](https://opensource.org/licenses/MIT).

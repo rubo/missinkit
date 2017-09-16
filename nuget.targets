@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
-    <WebDownload Condition="!Exists('nuget.exe')" Filename="nuget.exe" FileUri="https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" />
-    <Exec Command="nuget pack MissinKit.csproj -Prop Configuration=Release"></Exec>
-  </Target>
-</Project>

@@ -55,15 +55,5 @@
     <Compile Include="Utilities\NSDateUtility.cs" />
     <Compile Include="Utilities\NSStringUtility.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="MissinKit.nuspec" />
-    <None Include="nuget.targets" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MSBuildTasks">
-      <Version>1.5.0.235</Version>
-    </PackageReference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="nuget.targets" />
 </Project>

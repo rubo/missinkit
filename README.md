@@ -34,5 +34,48 @@ DateTime datetime = nsdate.ToDateTime();
 ```
 Not a big deal, but convenient.
 
+#### iOS 11 Fallback
+
+Since iOS 11 introduced some breaking changes to UIView layout handling,
+there are a few fallback extension methods to reduce boilerplate code required to handle those changes.
+
+The `SafeAreaLayoutGuide()` method returns the `UIVIew.SafeAreaLayoutGuide` for iOS 11 and later
+and falls back to a layout guide based on the frame rectangle of the current view for older systems.
+```csharp
+var insets = view.SafeAreaLayoutGuide();
+```
+The `SafeAreaLayoutGuide()` method uses the frame layout guide as a fallback.
+The frame layout guide is a layout guide anchors of which simply return its owning view's anchors.
+The frame layout guide is created using the `FrameLayoutGuide()` extension method
+which is especially helpful for the scenarios like this:
+```csharp
+var isIos11OrLater = UIDevice.CurrentDevice.CheckSystemVersion(11, 0);
+var widthAnchor = isIos11OrLater ? view.SafeAreaLayoutGuide.WidthAnchor : view.WidthAnchor;
+var heightAnchor = isIos11OrLater ? view.SafeAreaLayoutGuide.HeightAnchor : view.HeightAnchor;
+// more checks here...
+```
+To avoid checking for all anchors of the view you need, simple use the frame layout guide:
+```csharp
+var layoutGuide = isIos11OrLater ? view.SafeAreaLayoutGuide : view.FrameLayoutGuide();
+```
+This is exactly what the `SafeAreaLayoutGuide()` method does so you don't even need to check the system version.
+But you can use the `FrameLayoutGuide()` method as a fallback for other layout guides introduced in iOS 11 if needed.
+
+The initial call of the `FrameLayoutGuide()` method adds the returned layout guide to the view's layout guides,
+so all subsequent calls return the already existing instance instead of creating a new one every time.
+
+Note that the `FrameLayoutGuide()` method returns the `FrameLayoutGuide` property for `UIScrollView`.
+
+The `SafeAreaInsets()` method returns the `UIVIew.SafeAreaInsets` for iOS 11 and later
+and falls back to UIEdgeInsets.Zero for older systems.
+```csharp
+var insets = view.SafeAreaInsets();
+```
+The `AdjustedContentInset()` method returns the `UIScrollView.AdjustedContentInset` for iOS 11 and later
+and falls back to `UIScrollView.ContentInset` for older systems.
+```csharp
+var insets = scrollView.AdjustedContentInset();
+```
+
 #### Machine Epsilon
 As on some ARM devices both `float.Epsilon` and `double.Epsilon` equate to zero, the constants `MachineEpsilon.Single` and `MachineEpsilon.Double` are recommended to be used instead.

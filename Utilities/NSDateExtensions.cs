@@ -6,7 +6,7 @@ using Foundation;
 
 namespace MissinKit.Utilities
 {
-    public static class NSDateUtility
+    public static class NSDateExtensions
     {
         /// <summary>
         /// Converts the current <see cref="NSDate"/> object to its equivalent <see cref="DateTime"/> representation.

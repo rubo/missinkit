@@ -17,7 +17,5 @@ namespace MissinKit.Interop.VariadicArguments
         protected internal override void CopyTo(IntPtr ptr) => Marshal.Copy(new[] { _value }, 0, ptr, 1);
 
         public override int Size { get; } = sizeof(double);
-
-        public override object Value => _value;
     }
 }

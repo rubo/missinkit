@@ -23,7 +23,7 @@ namespace MissinKit.Utilities
         /// A localized string for the current key in the default table of the main bundle
         /// into which the remaining argument values in <code>args</code> are substituted.
         /// </returns>
-        public static string Localize(this string key, params VariadicArgument[] args) => Localize(key, null, NSBundle.MainBundle, null, args);
+        public static string Localize(this string key, params object[] args) => Localize(key, null, NSBundle.MainBundle, null, args);
 
         /// <summary>
         /// Returns a localized string for the current key into which the remaining argument values are substituted.
@@ -37,19 +37,70 @@ namespace MissinKit.Utilities
         /// A localized string for the current key in <code>table</code> of <code>bundle</code>
         /// into which the remaining argument values in <code>args</code> are substituted.
         /// </returns>
-        public static string Localize(this string key, string table, NSBundle bundle, string value, params VariadicArgument[] args)
+        public static string Localize(this string key, string table, NSBundle bundle, string value, params object[] args)
         {
             if (bundle == null)
                 throw new ArgumentNullException(nameof(bundle));
 
-            if (args.Length == 0)
+            var argCount = args?.Length ?? 0;
+
+            if (argCount == 0)
                 return bundle.LocalizedString(key, table, value);
 
             var str = bundle.LocalizedNSString(key, table, value);
-            
-            return string.CompareOrdinal(str.Class.Name, NSLocalizedString) == 0
-                ? NSStringUtility.LocalizedFormat(str, args)
-                : string.Format(str, args.Select(a => a.Value).ToArray());
+
+            if (string.CompareOrdinal(str.Class.Name, NSLocalizedString) != 0)
+                return string.Format(str, args);
+
+            var varargs = new VariadicArgument[argCount];
+
+            for (var i = 0; i < argCount; i++)
+            {
+                var arg = args[i];
+                var type = arg?.GetType() ?? typeof(string);
+
+                switch (Type.GetTypeCode(type))
+                {
+                    case TypeCode.Byte:
+                    case TypeCode.Int16:
+                    case TypeCode.Int32:
+                    case TypeCode.SByte:
+                    case TypeCode.UInt16:
+                    case TypeCode.UInt32:
+                        varargs[i] = (int) arg;
+                        break;
+
+                    case TypeCode.Decimal:
+                    case TypeCode.Double:
+                    case TypeCode.Single:
+                        varargs[i] = (double) arg;
+                        break;
+
+                    case TypeCode.Int64:
+                    case TypeCode.UInt64:
+                        varargs[i] = (long) arg;
+                        break;
+
+                    case TypeCode.String:
+                        varargs[i] = (string) arg;
+                        break;
+
+                    case TypeCode.Object:
+                        if (type == typeof(nfloat))
+                            varargs[i] = (nfloat) arg;
+                        else if (type == typeof(nint))
+                            varargs[i] = (nint) arg;
+                        else
+                            varargs[i] = arg.ToString();
+                        break;
+
+                    default:
+                        varargs[i] = arg.ToString();
+                        break;
+                }
+            }
+
+            return NSStringUtility.LocalizedFormat(str, varargs);
         }
     }
 }

@@ -43,9 +43,6 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interop\VariadicArguments\DecimalArgument.cs" />
-    <Compile Include="Interop\VariadicArguments\CharArgument.cs" />
-    <Compile Include="Interop\VariadicArguments\SingleArgument.cs" />
     <Compile Include="Interop\VariadicArguments\DoubleArgument.cs" />
     <Compile Include="Interop\VariadicArguments\Int32Argument.cs" />
     <Compile Include="Interop\VariadicArguments\Int64Argument.cs" />

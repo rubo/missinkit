@@ -44,7 +44,5 @@ namespace MissinKit.Interop.VariadicArguments
 
             Marshal.Copy(new [] { _handle }, 0, ptr, 1);
         }
-
-        public override object Value => _value;
     }
 }

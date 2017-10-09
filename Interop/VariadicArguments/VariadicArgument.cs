@@ -29,6 +29,8 @@ namespace MissinKit.Interop.VariadicArguments
         protected internal abstract void CopyTo(IntPtr ptr);
 
         #region Operators
+        public static implicit operator VariadicArgument(char arg) => new CharArgument(arg);
+
         public static implicit operator VariadicArgument(decimal arg) => new DecimalArgument(arg);
 
         public static implicit operator VariadicArgument(double arg) => new DoubleArgument(arg);

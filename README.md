@@ -17,7 +17,27 @@ If key is found, it formats the string accordinig to the .stringsdict file. Othe
 Note that the `NSStringUtility.LocalizedFormat()` method must be used in pair with the `NSBundle.LocalizedNSString()` extension method
 as the latter returns a special instance of `NSString` (`__NSLocalizedString`) with the data from the .stringsdict file.
 
-WARNING! The `NSStringUtility.LocalizedFormat()` method does not work on 64-bit simulators. There's no known workaround.
+WARNING! The `NSStringUtility.LocalizedFormat()` method does not work on 64-bit simulators.
+
+Instead of using the `NSStringUtility.LocalizedFormat()` or `NSBundle.LocalizedString()` methods directly,
+use the convenient extension methods which are more than enough for the vast majority of cases:
+```csharp
+// instead of
+str = NSBundle.MainBundle.LocalizedString("key");
+// use
+str = "key".Localize();
+
+// instead of
+str = string.format(NSBundle.MainBundle.LocalizedString("key"), 2, "text");
+// use
+str = "key".Localize(2, "text");
+
+// instead of
+str = NSStringUtility.LocalizedFormat(NSBundle.MainBundle.LocalizedNSString("key"), 3);
+// use
+str = "key".Localize(3);
+```
+These methods work with both .strings and .stringsdict files.
 
 #### Network Reachability
 The `Reachability` class is a port of Apple's Reachability sample app to monitor the network state of an iOS device.

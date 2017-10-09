@@ -12,7 +12,7 @@ namespace MissinKit.Utilities
     public static class NSStringUtility
     {
         #region Fields
-        private static readonly IntPtr InitWithFormatArgumentsHandle = Selector.GetHandle("initWithFormat:arguments:");
+        private static readonly IntPtr InitWithFormatLocaleArgumentsHandle = Selector.GetHandle("initWithFormat:locale:arguments:");
         private static readonly IntPtr LocalizedStringForKeyValueTableHandle = Selector.GetHandle("localizedStringForKey:value:table:");
         #endregion
 
@@ -35,13 +35,14 @@ namespace MissinKit.Utilities
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
 
-            // Falls back to return the format itself to prevent runtime error on x86_64 systems
+            // Fallback to prevent runtime error on x86_64 systems
             if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 8)
-                return format; 
+                return format;
 
             using (var str = NSObject.Alloc(new Class(typeof(NSString))))
             using (var varargs = new VariadicArgumentList(args))
-                return NSString.FromHandle(NSStringInitWithFormatArguments(str.Handle, InitWithFormatArgumentsHandle, format.Handle, varargs.Handle));
+                return NSString.FromHandle(NSStringInitWithFormatLocaleArguments(
+                    str.Handle, InitWithFormatLocaleArgumentsHandle, format.Handle, NSLocale.CurrentLocale.Handle, varargs.Handle));
         }
 
         /// <summary>
@@ -94,9 +95,6 @@ namespace MissinKit.Utilities
         /// </returns>
         public static NSString LocalizedNSString(this NSBundle bundle, string key, string value, string table)
         {
-            if (bundle == null)
-                throw new ArgumentNullException(nameof(bundle));
-
             var keyHandle = key == null ? IntPtr.Zero : NSString.CreateNative(key);
             var valueHandle = value == null ? IntPtr.Zero : NSString.CreateNative(value);
             var tableHandle = table == null ? IntPtr.Zero : NSString.CreateNative(table);
@@ -120,7 +118,7 @@ namespace MissinKit.Utilities
         private static extern IntPtr NSBundleLocalizedStringForKeyValueTable(IntPtr target, IntPtr selector, IntPtr key, IntPtr value, IntPtr table);
 
         [DllImport(Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
-        private static extern IntPtr NSStringInitWithFormatArguments(IntPtr target, IntPtr selector, IntPtr key, IntPtr args);
+        private static extern IntPtr NSStringInitWithFormatLocaleArguments(IntPtr target, IntPtr selector, IntPtr format, IntPtr locale, IntPtr args);
         #endregion
     }
 }

@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <DocumentationFile>bin\Release\MissinKit.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,6 +43,8 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interop\VariadicArguments\DecimalArgument.cs" />
+    <Compile Include="Interop\VariadicArguments\SingleArgument.cs" />
     <Compile Include="Interop\VariadicArguments\DoubleArgument.cs" />
     <Compile Include="Interop\VariadicArguments\Int32Argument.cs" />
     <Compile Include="Interop\VariadicArguments\Int64Argument.cs" />
@@ -54,6 +57,7 @@
     <Compile Include="Utilities\MachineEpsilon.cs" />
     <Compile Include="Utilities\NSDateExtensions.cs" />
     <Compile Include="Utilities\NSStringUtility.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\UIViewExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

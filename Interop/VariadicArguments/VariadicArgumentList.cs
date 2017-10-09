@@ -1,6 +1,8 @@
 // Copyright 2016 Ruben Buniatyan
 // Licensed under the MIT License. For full terms, see LICENSE in the project root.
 
+#pragma warning disable 1591
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +34,7 @@ namespace MissinKit.Interop.VariadicArguments
         }
 
         #region Dispose
-        ~VariadicArgumentList()
-        {
-            Dispose(false);
-        }
+        ~VariadicArgumentList() => Dispose(false);
 
         public void Dispose()
         {

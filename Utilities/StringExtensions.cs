@@ -23,7 +23,7 @@ namespace MissinKit.Utilities
         /// A localized string for the current key in the default table of the main bundle
         /// into which the remaining argument values in <code>args</code> are substituted.
         /// </returns>
-        public static string Localize(this string key, params object[] args) => Localize(key, null, NSBundle.MainBundle, null, args);
+        public static string Localize(this string key, params object[] args) => Localize(key, null, L10n.BundleForCurrentLocale, null, args);
 
         /// <summary>
         /// Returns a localized string for the current key into which the remaining argument values are substituted.

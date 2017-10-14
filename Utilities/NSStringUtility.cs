@@ -62,10 +62,7 @@ namespace MissinKit.Utilities
         /// </item>
         /// </list>
         /// </returns>
-        public static NSString LocalizedNSString(this NSBundle bundle, string key)
-        {
-            return LocalizedNSString(bundle, key, null, null);
-        }
+        public static NSString LocalizedNSString(this NSBundle bundle, string key) => LocalizedNSString(bundle, key, null, null);
 
         /// <summary>
         /// Returns a localized version of the string designated by the specified key and residing in the specified table.

@@ -52,6 +52,7 @@
     <Compile Include="Net\Reachability.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\DrawerController.cs" />
+    <Compile Include="Utilities\L10n.cs" />
     <Compile Include="Utilities\MachineEpsilon.cs" />
     <Compile Include="Utilities\NSDateExtensions.cs" />
     <Compile Include="Utilities\NSStringUtility.cs" />

@@ -27,7 +27,8 @@ namespace MissinKit.Utilities
 
             _locale = NSLocale.FromLocaleIdentifier(localeId);
 
-            var path = NSBundle.MainBundle.PathForResource(_locale.LanguageCode, "lproj");
+            var path = NSBundle.MainBundle.PathForResource(_locale.LanguageCode, "lproj")
+                ?? NSBundle.MainBundle.PathForResource("Base", "lproj");
 
             BundleForCurrentLocale = string.IsNullOrEmpty(path) ? NSBundle.MainBundle : NSBundle.FromPath(path);
 

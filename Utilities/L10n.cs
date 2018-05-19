@@ -20,6 +20,10 @@ namespace MissinKit.Utilities
         private static NSLocale _locale; 
         #endregion
 
+        /// <summary>
+        /// Overrides <see cref="NSLocale.CurrentLocale"/> with a locale for the identifier specified.
+        /// </summary>
+        /// <param name="localeId">Locale identifier</param>
         public static void OverrideCurrentLocale(string localeId)
         {
             if (string.CompareOrdinal(localeId, _locale?.Identifier) == 0)
@@ -50,8 +54,13 @@ namespace MissinKit.Utilities
             block.CleanupBlock();
 
             IsOverridden = true;
+
+            NSNotificationCenter.DefaultCenter.PostNotificationName(NSLocale.CurrentLocaleDidChangeNotification, null);
         }
 
+        /// <summary>
+        /// Restores <see cref="NSLocale.CurrentLocale"/> to its genuine value.
+        /// </summary>
         public static void RestoreCurrentLocale()
         {
             if (!IsOverridden)
@@ -67,10 +76,22 @@ namespace MissinKit.Utilities
             BundleForCurrentLocale = NSBundle.MainBundle;
 
             IsOverridden = false;
+
+            NSNotificationCenter.DefaultCenter.PostNotificationName(NSLocale.CurrentLocaleDidChangeNotification, null);
         }
 
+        /// <summary>
+        /// Returns an <see cref="NSBundle"/> object corresponding to the bundle directory for the overridden locale.
+        /// If the current locale is not overridden, returns <see cref="NSBundle.MainBundle"/>.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="NSBundle"/> object corresponding to the bundle directory for the overridden locale.
+        /// </returns>
         public static NSBundle BundleForCurrentLocale { get; private set; } = NSBundle.MainBundle;
 
+        /// <summary>
+        /// Gets a value indicating whether the current locale is overridden.
+        /// </summary>
         public static bool IsOverridden { get; private set; }
 
         #region Swizzling Methods

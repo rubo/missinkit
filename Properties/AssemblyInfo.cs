@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ruben Buniatyan")]
 [assembly: AssemblyProduct("MissinKit")]
-[assembly: AssemblyCopyright("© 2016 Ruben Buniatyan. All rights reserved.")]
+[assembly: AssemblyCopyright("© 2016 Ruben Buniatyan")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyInformationalVersion("1.5.0-beta2")]
+[assembly: AssemblyInformationalVersion("1.5.0")]
 [assembly: AssemblyVersion("1.5.0.*")]

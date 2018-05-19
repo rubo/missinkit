@@ -54,8 +54,26 @@ DateTime datetime = nsdate.ToDateTime();
 ```
 Not a big deal, but convenient.
 
-#### iOS 11 Fallback
+#### Changing Current Locale on the Fly
+Since iOS doesn't provide an easy way to change `NSLocale.CurrentLocale` programmatically,
+there's a utility to help with that.
+```csharp
+var date = new DateTime(2018, 1, 1).ToNSDate();
+var formatter = new NSDateFormatter() { DateFormat = "EEEE" };
 
+L10n.OverrideCurrentLocale("es_MX");
+
+formatter.Locale = NSLocale.CurrentLocale;
+Debug.WriteLine(formatter.StringFor(date)); // outputs 'lunes'
+
+L10n.RestoreCurrentLocale();
+
+formatter.Locale = NSLocale.CurrentLocale;
+Debug.WriteLine(formatter.StringFor(date)); // outputs 'Monday'
+```
+Overriding or restoring the current locale triggers `NSCurrentLocaleDidChangeNotification`.
+
+#### iOS 11 Fallback
 Since iOS 11 introduced some breaking changes to UIView layout handling,
 there are a few fallback extension methods to reduce boilerplate code required to handle those changes.
 

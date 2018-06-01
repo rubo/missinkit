@@ -10,30 +10,27 @@ As Xamarin's current `NSString.LocalizedFormat()` method is useless,
 there's no way to use iOS native pluralization. To turn this very important feature on,
 there's the `NSStringUtility.LocalizedFormat()` method to replace Xamarin's counterpart:
 ```csharp
-NSStringUtility.LocalizedFormat(NSBundle.MainBundle.LocalizedNSString("%d file(s) remaining"), 2)
+NSStringUtility.LocalizedFormat(NSBundle.MainBundle.GetLocalizedString("%d file(s) remaining"), 2)
 ```
 If key is found, it formats the string accordinig to the .stringsdict file. Otherwise, it falls back and prints "2 file(s) remaining".
 
-Note that the `NSStringUtility.LocalizedFormat()` method must be used in pair with the `NSBundle.LocalizedNSString()` extension method
-as the latter returns a special instance of `NSString` (`__NSLocalizedString`) with the data from the .stringsdict file.
-
 WARNING! The `NSStringUtility.LocalizedFormat()` method does not work on 64-bit simulators.
 
-Instead of using the `NSStringUtility.LocalizedFormat()` or `NSBundle.LocalizedString()` methods directly,
+Instead of using the `NSStringUtility.LocalizedFormat()` or `NSBundle.GetLocalizedString()` methods directly,
 use the convenient extension methods which are more than enough for the vast majority of cases:
 ```csharp
 // instead of
-str = NSBundle.MainBundle.LocalizedString("key");
+str = NSBundle.MainBundle.GetLocalizedString("key");
 // use
 str = "key".Localize();
 
 // instead of
-str = string.format(NSBundle.MainBundle.LocalizedString("key"), 2, "text");
+str = string.format(NSBundle.MainBundle.GetLocalizedString("key"), 2, "text");
 // use
 str = "key".Localize(2, "text");
 
 // instead of
-str = NSStringUtility.LocalizedFormat(NSBundle.MainBundle.LocalizedNSString("key"), 3);
+str = NSStringUtility.LocalizedFormat(NSBundle.MainBundle.GetLocalizedString("key"), 3);
 // use
 str = "key".Localize(3);
 ```

@@ -45,11 +45,11 @@ namespace MissinKit.Utilities
             var argCount = args?.Length ?? 0;
 
             if (argCount == 0)
-                return bundle.LocalizedString(key, table, value);
+                return bundle.GetLocalizedString(key, table, value);
 
-            var str = bundle.LocalizedNSString(key, table, value);
+            var str = bundle.GetLocalizedString(key, table, value);
 
-            if (string.CompareOrdinal(str.Class.Name, NSLocalizedString) != 0)
+            if (str.Class.Name != NSLocalizedString)
                 return string.Format(str, args);
 
             var varargs = new VariadicArgument[argCount];

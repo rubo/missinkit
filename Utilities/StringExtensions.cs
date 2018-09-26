@@ -4,7 +4,6 @@
 #pragma warning disable 1591
 
 using System;
-using System.Linq;
 using Foundation;
 using MissinKit.Interop.VariadicArguments;
 
@@ -42,19 +41,17 @@ namespace MissinKit.Utilities
             if (bundle == null)
                 throw new ArgumentNullException(nameof(bundle));
 
-            var argCount = args?.Length ?? 0;
-
-            if (argCount == 0)
-                return bundle.GetLocalizedString(key, table, value);
-
             var str = bundle.GetLocalizedString(key, table, value);
+
+            if (args == null)
+                return str;
 
             if (str.Class.Name != NSLocalizedString)
                 return string.Format(str, args);
 
-            var varargs = new VariadicArgument[argCount];
+            var varargs = new VariadicArgument[args.Length];
 
-            for (var i = 0; i < argCount; i++)
+            for (int i = 0, count = args.Length; i < count; i++)
             {
                 var arg = args[i];
                 var type = arg?.GetType() ?? typeof(string);
@@ -67,29 +64,29 @@ namespace MissinKit.Utilities
                     case TypeCode.SByte:
                     case TypeCode.UInt16:
                     case TypeCode.UInt32:
-                        varargs[i] = (int) arg;
+                        varargs[i] = (int)arg;
                         break;
 
                     case TypeCode.Decimal:
                     case TypeCode.Double:
                     case TypeCode.Single:
-                        varargs[i] = (double) arg;
+                        varargs[i] = (double)arg;
                         break;
 
                     case TypeCode.Int64:
                     case TypeCode.UInt64:
-                        varargs[i] = (long) arg;
+                        varargs[i] = (long)arg;
                         break;
 
                     case TypeCode.String:
-                        varargs[i] = (string) arg;
+                        varargs[i] = arg?.ToString();
                         break;
 
                     case TypeCode.Object:
                         if (type == typeof(nfloat))
-                            varargs[i] = (nfloat) arg;
+                            varargs[i] = (nfloat)arg;
                         else if (type == typeof(nint))
-                            varargs[i] = (nint) arg;
+                            varargs[i] = (nint)arg;
                         else
                             varargs[i] = arg.ToString();
                         break;

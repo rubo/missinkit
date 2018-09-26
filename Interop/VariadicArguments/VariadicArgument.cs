@@ -29,7 +29,7 @@ namespace MissinKit.Interop.VariadicArguments
         #region Operators
         public static implicit operator VariadicArgument(char arg) => new StringArgument(arg.ToString());
 
-        public static implicit operator VariadicArgument(decimal arg) => new DoubleArgument((double) arg);
+        public static implicit operator VariadicArgument(decimal arg) => new DoubleArgument((double)arg);
 
         public static implicit operator VariadicArgument(double arg) => new DoubleArgument(arg);
 
@@ -39,7 +39,7 @@ namespace MissinKit.Interop.VariadicArguments
 
         public static implicit operator VariadicArgument(nfloat arg) => new DoubleArgument(arg);
 
-        public static implicit operator VariadicArgument(nint arg) => nint.Size == sizeof(long) ? new Int64Argument(arg) : (VariadicArgument) new Int32Argument((int) arg);
+        public static implicit operator VariadicArgument(nint arg) => nint.Size == sizeof(long) ? new Int64Argument(arg) : (VariadicArgument)new Int32Argument((int)arg);
 
         public static implicit operator VariadicArgument(string arg) => new StringArgument(arg);
         #endregion

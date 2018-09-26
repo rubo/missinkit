@@ -42,7 +42,7 @@ namespace MissinKit.Interop.VariadicArguments
 
             _handle = Marshal.StringToHGlobalAuto(_value);
 
-            Marshal.Copy(new [] { _handle }, 0, ptr, 1);
+            Marshal.Copy(new[] { _handle }, 0, ptr, 1);
         }
     }
 }

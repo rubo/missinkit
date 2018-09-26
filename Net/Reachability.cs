@@ -11,17 +11,6 @@ namespace MissinKit.Net
 {
     public class Reachability
     {
-        #region Fields
-        protected readonly NetworkReachability HostReachability;
-        #endregion
-
-        #region Events
-        /// <summary>
-        /// Occurs when the reachability of the specified host is changed.
-        /// </summary>
-        public event EventHandler ReachabilityChanged;
-        #endregion
-
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the Reachability class with the specified IP address.
@@ -35,7 +24,7 @@ namespace MissinKit.Net
             if (hostAddress == null)
                 throw new ArgumentNullException(nameof(hostAddress));
 
-            HostReachability = new NetworkReachability(hostAddress);
+            NetReachability = new NetworkReachability(hostAddress);
 
             Initialize();
         }
@@ -52,26 +41,24 @@ namespace MissinKit.Net
             if (hostName == null)
                 throw new ArgumentNullException(nameof(hostName));
 
-            HostReachability = new NetworkReachability(hostName);
+            NetReachability = new NetworkReachability(hostName);
 
             Initialize();
         }
 
         private void Initialize()
         {
-            HostReachability.Schedule(CFRunLoop.Current, CFRunLoop.ModeDefault);
-            HostReachability.SetNotification(flags => RaiseReachabilityChangedEvent());
+            NetReachability.Schedule(CFRunLoop.Current, CFRunLoop.ModeDefault);
+            NetReachability.SetNotification(flags => RaiseReachabilityChangedEvent());
         }
         #endregion
 
-        #region Static Properties
+        #region Properties
         /// <summary>
         /// Gets the default route reachability. Should be used by applications that do not connect to a particular host.
         /// </summary>
         public static Reachability Default { get; } = new Reachability(new IPAddress(0));
-        #endregion
 
-        #region Properties
         /// <summary>
         /// Gets a value indicating whether a connection is required to reach the host.
         /// </summary>
@@ -79,13 +66,14 @@ namespace MissinKit.Net
         /// WWAN may be available, but not active until a connection has been established.
         /// WLAN may require a connection for VPN on Demand.
         /// </remarks>
-        public bool IsConnectionRequired => HostReachability.TryGetFlags(out var flags) && (flags & NetworkReachabilityFlags.ConnectionRequired) != 0;
+        public bool IsConnectionRequired => NetReachability.TryGetFlags(out var flags) && (flags & NetworkReachabilityFlags.ConnectionRequired) != 0;
+
+        protected NetworkReachability NetReachability { get; }
 
         /// <summary>
         /// Gets the reachability status of the host specified.
         /// </summary>
-        public ReachabilityStatus Status => HostReachability.TryGetFlags(out var flags) ? GetReachabilityStatus(flags) : ReachabilityStatus.Unreachable;
-
+        public ReachabilityStatus Status => NetReachability.TryGetFlags(out var flags) ? GetReachabilityStatus(flags) : ReachabilityStatus.Unreachable;
         #endregion
 
         protected static ReachabilityStatus GetReachabilityStatus(NetworkReachabilityFlags flags)
@@ -108,7 +96,7 @@ namespace MissinKit.Net
                 return ReachabilityStatus.ReachableViaWwan;
 
             if ((flags & NetworkReachabilityFlags.ConnectionRequired) == 0 || // if no connection is required
-                // or the connection is on-demand or on-traffic
+                                                                              // or the connection is on-demand or on-traffic
                 ((flags & NetworkReachabilityFlags.ConnectionOnDemand) != 0 || (flags & NetworkReachabilityFlags.ConnectionOnTraffic) != 0) &&
                 (flags & NetworkReachabilityFlags.InterventionRequired) == 0) // and no user intervention is required
                 return ReachabilityStatus.ReachableViaWlan;
@@ -122,6 +110,13 @@ namespace MissinKit.Net
 
             handler?.Invoke(this, EventArgs.Empty);
         }
+
+        #region Events
+        /// <summary>
+        /// Occurs when the reachability of the specified host is changed.
+        /// </summary>
+        public event EventHandler ReachabilityChanged;
+        #endregion
     }
 
     public enum ReachabilityStatus

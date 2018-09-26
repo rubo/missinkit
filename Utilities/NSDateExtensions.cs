@@ -25,7 +25,7 @@ namespace MissinKit.Utilities
             if (seconds > 252423993599)
                 return DateTime.MaxValue;
 
-            return (DateTime) date;
+            return (DateTime)date;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace MissinKit.Utilities
             if (dateTime.Kind == DateTimeKind.Unspecified)
                 dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
 
-            return (NSDate) dateTime;
+            return (NSDate)dateTime;
         }
     }
 }

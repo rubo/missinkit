@@ -17,7 +17,7 @@ namespace MissinKit.Utilities
         private static readonly CurrentLocaleDelegate CurrentLocaleTrampoline = GetCurrentLocale;
 
         private static IntPtr _genuineImp = IntPtr.Zero;
-        private static NSLocale _locale; 
+        private static NSLocale _locale;
         #endregion
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace MissinKit.Utilities
         private delegate IntPtr CurrentLocaleDelegate();
 
         [MonoPInvokeCallback(typeof(CurrentLocaleDelegate))]
-        private static IntPtr GetCurrentLocale() => _locale.Handle; 
+        private static IntPtr GetCurrentLocale() => _locale.Handle;
         #endregion
 
         #region Objective-C Bindings

@@ -112,5 +112,15 @@ and falls back to `UIScrollView.ContentInset` for older systems.
 var insets = scrollView.AdjustedContentInset();
 ```
 
+#### Update Watcher
+This is a simple utility for a quick check for app updates in App Store.
+```csharp
+var updateWatcher = new UpdateWatcher(3); // Checks every 3 days
+var updateAvailable = await updateWatcher.CheckForUpdateAsync();
+
+if (updateAvailable)
+    // Notify user
+```
+
 #### Machine Epsilon
 As on some ARM devices both `float.Epsilon` and `double.Epsilon` equate to zero, the constants `MachineEpsilon.Single` and `MachineEpsilon.Double` are recommended to be used instead.

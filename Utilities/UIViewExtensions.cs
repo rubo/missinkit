@@ -1,6 +1,7 @@
 ﻿// Copyright 2017 Ruben Buniatyan
 // Licensed under the MIT License. For full terms, see LICENSE in the project root.
 
+using System;
 using System.Linq;
 using CoreGraphics;
 using UIKit;
@@ -24,8 +25,14 @@ namespace MissinKit.Utilities
         /// <see cref="UIScrollView.AdjustedContentInset"/> of the current <see cref="UIScrollView"/> object if available;
         /// otherwise, <see cref="UIScrollView.ContentInset"/>.
         /// </returns>
-        public static UIEdgeInsets AdjustedContentInset(this UIScrollView scrollView) =>
-            IsIos11OrLater ? scrollView.AdjustedContentInset : scrollView.ContentInset;
+        public static UIEdgeInsets AdjustedContentInset(this UIScrollView scrollView)
+        {
+            if (scrollView == null)
+                throw new ArgumentNullException(nameof(scrollView));
+
+            return IsIos11OrLater ? scrollView.AdjustedContentInset : scrollView.ContentInset;
+        }
+
         #endregion
 
         #region UIView Methods
@@ -38,7 +45,13 @@ namespace MissinKit.Utilities
         /// <see cref="UIView.SafeAreaInsets"/> of the current <see cref="UIView"/> object if available;
         /// otherwise, <see cref="UIEdgeInsets.Zero"/>.
         /// </returns>
-        public static UIEdgeInsets SafeAreaInsets(this UIView view) => IsIos11OrLater ? view.SafeAreaInsets : UIEdgeInsets.Zero;
+        public static UIEdgeInsets SafeAreaInsets(this UIView view)
+        {
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
+
+            return IsIos11OrLater ? view.SafeAreaInsets : UIEdgeInsets.Zero;
+        }
 
         /// <summary>
         /// Returns <see cref="UIView.SafeAreaLayoutGuide"/> of the current <see cref="UIView"/> object if available,
@@ -49,7 +62,13 @@ namespace MissinKit.Utilities
         /// <see cref="UIView.SafeAreaLayoutGuide"/> of the current <see cref="UIView"/> object if available;
         /// otherwise, <see cref="FrameLayoutGuide"/>.
         /// </returns>
-        public static UILayoutGuide SafeAreaLayoutGuide(this UIView view) => IsIos11OrLater ? view.SafeAreaLayoutGuide : view.FrameLayoutGuide();
+        public static UILayoutGuide SafeAreaLayoutGuide(this UIView view)
+        {
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
+
+            return IsIos11OrLater ? view.SafeAreaLayoutGuide : view.FrameLayoutGuide();
+        }
 
         /// <summary>
         /// Creates a layout guide based on the frame rectangle of the current <see cref="UIView"/> object.
@@ -65,6 +84,9 @@ namespace MissinKit.Utilities
         /// </returns>
         public static UILayoutGuide FrameLayoutGuide(this UIView view)
         {
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
+
             if (IsIos11OrLater && view is UIScrollView scrollView)
                 return scrollView.FrameLayoutGuide;
 

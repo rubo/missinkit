@@ -89,36 +89,32 @@ namespace MissinKit.Utilities
                 return false;
 
             using (stream)
-            {
-                using (var reader = new StreamReader(stream))
-                using (var json = new JsonTextReader(reader))
+            using (var reader = new StreamReader(stream))
+            using (var json = new JsonTextReader(reader))
+                try
                 {
-                    try
-                    {
-                        var serializer = JsonSerializer.CreateDefault();
-                        var result = (JObject)serializer.Deserialize(json);
-                        var r = result?["results"]?.FirstOrDefault();
+                    var serializer = JsonSerializer.CreateDefault();
+                    var result = (JObject)serializer.Deserialize(json);
+                    var r = result?["results"]?.FirstOrDefault();
 
-                        if (r == null)
-                            return false;
+                    if (r == null)
+                        return false;
 
-                        var version = r.Value<string>("version");
-                        var storeVersion = new SemVer(version);
+                    var version = r.Value<string>("version");
+                    var storeVersion = new SemVer(version);
 
-                        version = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleShortVersionString").ToString();
+                    version = NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleShortVersionString").ToString();
 
-                        var currentVersion = new SemVer(version);
+                    var currentVersion = new SemVer(version);
 
-                        NSUserDefaults.StandardUserDefaults.SetInt((nint)DateTime.UtcNow.Ticks, LastCheckKey);
+                    NSUserDefaults.StandardUserDefaults.SetInt((nint)DateTime.UtcNow.Ticks, LastCheckKey);
 
-                        return storeVersion > currentVersion;
-                    }
-                    catch (JsonException ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
+                    return storeVersion > currentVersion;
                 }
-            }
+                catch (JsonException ex)
+                {
+                    Debug.WriteLine(ex);
+                }
 
             return false;
         }

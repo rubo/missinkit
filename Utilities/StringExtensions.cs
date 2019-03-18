@@ -28,8 +28,8 @@ namespace MissinKit.Utilities
         /// Returns a localized string for the current key into which the remaining argument values are substituted.
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="bundle">The bundle containing the strings file. This value must not be <code>null</code></param>
         /// <param name="table">The name of the table containing the key-value pairs.</param>
+        /// <param name="bundle">The bundle containing the strings file. This value must not be <code>null</code></param>
         /// <param name="value">The value to return if a localized string for key can't be found in the table.</param>
         /// <param name="args">A list of arguments to substitute into the localized string for the current key.</param>
         /// <returns>
@@ -41,7 +41,7 @@ namespace MissinKit.Utilities
             if (bundle == null)
                 throw new ArgumentNullException(nameof(bundle));
 
-            var str = bundle.GetLocalizedString(key, table, value);
+            var str = bundle.GetLocalizedString(key, value, table);
 
             if (args == null)
                 return str;
